@@ -11,6 +11,10 @@ variable "sqs_queue_arn" { type = string }
 variable "sqs_queue_url" { type = string }
 variable "sns_topic_arn" { type = string }
 variable "bedrock_model_id" { type = string }
+variable "container_image" {
+  type    = string
+  default = "python:3.12-slim"
+}
 
 # --- IAM ---
 
@@ -100,6 +104,24 @@ resource "aws_iam_role" "fargate_execution" {
 }
 
 data "aws_iam_policy_document" "fargate_execution_permissions" {
+  statement {
+    sid = "ECRAuth"
+    actions = [
+      "ecr:GetAuthorizationToken",
+    ]
+    resources = ["*"]
+  }
+
+  statement {
+    sid = "ECRPull"
+    actions = [
+      "ecr:BatchCheckLayerAvailability",
+      "ecr:GetDownloadUrlForLayer",
+      "ecr:BatchGetImage",
+    ]
+    resources = ["arn:aws:ecr:*:*:repository/intent-engine"]
+  }
+
   statement {
     sid = "Logs"
     actions = [
@@ -306,6 +328,11 @@ resource "aws_lambda_event_source_mapping" "sqs_extractor" {
 
 # --- Fargate (API) ---
 
+resource "aws_cloudwatch_log_group" "api" {
+  name              = "/ecs/intent-api-${var.environment}"
+  retention_in_days = 30
+}
+
 resource "aws_ecs_cluster" "main" {
   name = "intent-engine-${var.environment}"
 
@@ -326,7 +353,7 @@ resource "aws_ecs_task_definition" "api" {
 
   container_definitions = jsonencode([{
     name  = "api"
-    image = "python:3.12-slim"  # placeholder--CI/CD builds the real image
+    image = var.container_image
     portMappings = [{
       containerPort = 8000
       protocol      = "tcp"

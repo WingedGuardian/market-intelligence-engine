@@ -51,7 +51,7 @@ resource "aws_rds_cluster" "main" {
   cluster_identifier = "intent-engine-${var.environment}"
   engine             = "aurora-postgresql"
   engine_mode        = "provisioned"
-  engine_version     = "16.1"
+  engine_version     = "16.4"
   database_name      = "intent_engine"
   master_username    = "intent"
   master_password    = random_password.db.result
@@ -62,14 +62,12 @@ resource "aws_rds_cluster" "main" {
   storage_encrypted       = true
   backup_retention_period = 30
 
-  # Aurora Serverless v2--scales to zero when idle
   serverlessv2_scaling_configuration {
-    min_capacity = 0.5  # lowest possible--$0.12/hr when active
+    min_capacity = 0.5
     max_capacity = 2.0
   }
 
   skip_final_snapshot = var.environment == "demo"
-  # prevent_destroy = true  # enable after first successful deploy
 
   tags = { Name = "intent-engine-db" }
 }

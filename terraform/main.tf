@@ -64,4 +64,5 @@ module "compute" {
   sns_topic_arn      = module.events.sns_topic_arn
   schedule_rule_name = module.events.schedule_rule_name
   bedrock_model_id   = var.bedrock_model_id
+  container_image    = var.container_image
 }
