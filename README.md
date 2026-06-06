@@ -1,6 +1,6 @@
 # Intent Engine v2--Sales Intelligence Pipeline
 
-Monitors the internet for buying signals, scores companies by purchase intent, and generates personalized outreach. Adapted from a system deployed at Vultr, where it processed 30K+ accounts across Americas and APAC. This is the portable AWS rebuild--same pipeline logic, no vendor lock-in, costs $0 at rest.
+Monitors the internet for buying signals, scores companies by purchase intent, and generates personalized outreach. Portable AWS architecture--serverless pipeline, costs $0 at rest.
 
 ## How it works
 
@@ -33,7 +33,7 @@ THRESHOLD = 70      # "Hot Lead"
 ALERT_COOLDOWN = 6h # per-company cooldown
 ```
 
-Weights come from the production deployment. Competitor dissatisfaction is highest because it's the strongest conversion signal--someone already looking to switch is much closer to a yes than someone just hiring.
+Competitor dissatisfaction is weighted highest because it's the strongest conversion signal--someone already looking to switch is much closer to a yes than someone just hiring.
 
 ## Run it
 
@@ -85,7 +85,7 @@ intent-engine/
 
 ## Cost
 
-All serverless/pay-per-use. Demo run costs $2–5 for a couple hours. `terraform destroy` brings it back to $0. The original stack this replaced ran $15K/mo in Salesforce + ZoomInfo + 6sense licensing.
+All serverless/pay-per-use. Demo run costs $2–5 for a couple hours. `terraform destroy` brings it back to $0.
 
 ---
 
