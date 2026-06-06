@@ -1,0 +1,13 @@
+__pycache__/
+*.py[cod]
+.env
+.venv/
+venv/
+*.egg-info/
+dist/
+.pytest_cache/
+.ruff_cache/
+.terraform/
+*.tfstate*
+.terraform.lock.hcl
+terraform/modules/compute/placeholder.zip

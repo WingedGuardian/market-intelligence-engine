@@ -1,0 +1,27 @@
+[project]
+name = "intent-engine"
+version = "2.0.0"
+description = "Sales intelligence pipeline — monitors buying signals, scores intent, generates outreach"
+requires-python = ">=3.11"
+dependencies = [
+    "sqlalchemy>=2.0",
+    "psycopg2-binary>=2.9",
+    "fastapi>=0.110",
+    "uvicorn[standard]>=0.27",
+    "boto3>=1.34",
+    "feedparser>=6.0",
+    "pydantic>=2.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "ruff",
+]
+
+[tool.ruff]
+target-version = "py312"
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "W"]
+

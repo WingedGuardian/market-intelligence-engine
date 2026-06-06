@@ -1,0 +1,64 @@
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: intent
+      POSTGRES_PASSWORD: intent
+      POSTGRES_DB: intent_engine
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U intent"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  api:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      DATABASE_URL: postgresql://intent:intent@db:5432/intent_engine
+      AWS_REGION: us-east-1
+      BEDROCK_MODEL_ID: anthropic.claude-3-haiku-20240307-v1:0
+      # for local dev — real creds come from IAM roles in production
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID:-test}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY:-test}
+    depends_on:
+      db:
+        condition: service_healthy
+
+  # run collectors manually: docker compose run --rm collector-rss
+  collector-rss:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    entrypoint: ["python", "-c", "from src.collectors.rss import handler; handler({}, None)"]
+    environment:
+      SQS_QUEUE_URL: ""
+    profiles: ["tools"]
+
+  collector-edgar:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    entrypoint: ["python", "-c", "from src.collectors.edgar import handler; handler({}, None)"]
+    environment:
+      SQS_QUEUE_URL: ""
+    profiles: ["tools"]
+
+  collector-news:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    entrypoint: ["python", "-c", "from src.collectors.news_search import handler; handler({}, None)"]
+    environment:
+      SQS_QUEUE_URL: ""
+    profiles: ["tools"]
+
+volumes:
+  pgdata:
