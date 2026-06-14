@@ -16,7 +16,7 @@ resource "aws_security_group" "rds" {
     from_port   = 5432
     to_port     = 5432
     protocol    = "tcp"
-    cidr_blocks = ["10.0.0.0/16"]  # VPC-internal only
+    cidr_blocks = ["10.0.0.0/16"] # VPC-internal only
     description = "postgres from VPC"
   }
 
@@ -34,7 +34,7 @@ resource "aws_security_group" "rds" {
 
 resource "random_password" "db" {
   length  = 24
-  special = false  # avoid shell escaping headaches in connection strings
+  special = false # avoid shell escaping headaches in connection strings
 }
 
 resource "aws_secretsmanager_secret" "db_password" {

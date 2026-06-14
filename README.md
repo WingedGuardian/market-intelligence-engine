@@ -68,7 +68,6 @@ intent-engine/
 │   └── shared/         # Config, constants
 ├── terraform/          # Full IaC--networking, data, events, compute
 ├── docker/
-├── tests/
 └── docker-compose.yml
 ```
 
@@ -81,7 +80,7 @@ intent-engine/
 - Bedrock (Claude Haiku--extraction + outreach)
 - EventBridge, SNS
 - Terraform
-- Docker Compose, pytest, ruff
+- Docker Compose, ruff
 
 ## Cost
 

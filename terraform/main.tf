@@ -38,10 +38,10 @@ module "networking" {
 module "data" {
   source = "./modules/data"
 
-  environment       = var.environment
-  vpc_id            = module.networking.vpc_id
+  environment        = var.environment
+  vpc_id             = module.networking.vpc_id
   private_subnet_ids = module.networking.private_subnet_ids
-  db_instance_class = var.db_instance_class
+  db_instance_class  = var.db_instance_class
 }
 
 module "events" {

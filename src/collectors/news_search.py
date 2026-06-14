@@ -19,7 +19,7 @@ import feedparser
 sqs = boto3.client("sqs")
 QUEUE_URL = os.environ.get("SQS_QUEUE_URL", "")
 
-# TODO: load targets from DB or EventBridge payload
+# static seed list; could be sourced from a DB table or EventBridge payload for multi-tenant use
 DEFAULT_TARGETS = ["Salesforce", "Snowflake", "Databricks", "HashiCorp", "Datadog"]
 
 GOOGLE_NEWS_RSS = "https://news.google.com/rss/search?q={query}&hl=en-US&gl=US&ceid=US:en"

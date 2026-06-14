@@ -32,7 +32,7 @@ resource "aws_subnet" "public" {
   availability_zone = local.azs[count.index]
 
   map_public_ip_on_launch = true
-  tags = { Name = "intent-public-${local.azs[count.index]}" }
+  tags                    = { Name = "intent-public-${local.azs[count.index]}" }
 }
 
 resource "aws_subnet" "private" {
@@ -60,7 +60,7 @@ resource "aws_route_table_association" "public" {
 }
 
 # NAT gateway for private subnet egress (Lambda needs to reach Bedrock + SQS)
-# TODO: move to NAT instance if cost matters--NAT GW is $32/mo idle
+# NAT GW is ~$32/mo idle; swap for a NAT instance if cost matters
 resource "aws_eip" "nat" {
   domain = "vpc"
 }

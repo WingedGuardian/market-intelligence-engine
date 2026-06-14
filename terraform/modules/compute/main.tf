@@ -275,7 +275,7 @@ resource "aws_lambda_function" "extractor" {
   role          = aws_iam_role.lambda.arn
   handler       = "src.extractor.handler.handler"
   runtime       = "python3.12"
-  timeout       = 300  # bedrock calls can be slow
+  timeout       = 300 # bedrock calls can be slow
   memory_size   = 512
 
   filename         = data.archive_file.lambda_placeholder.output_path
@@ -313,8 +313,8 @@ resource "aws_lambda_function" "scorer" {
 
   environment {
     variables = {
-      DATABASE_URL   = var.database_url
-      SNS_TOPIC_ARN  = var.sns_topic_arn
+      DATABASE_URL  = var.database_url
+      SNS_TOPIC_ARN = var.sns_topic_arn
     }
   }
 }
@@ -323,7 +323,7 @@ resource "aws_lambda_function" "scorer" {
 resource "aws_lambda_event_source_mapping" "sqs_extractor" {
   event_source_arn = var.sqs_queue_arn
   function_name    = aws_lambda_function.extractor.arn
-  batch_size       = 5  # process 5 articles per invocation
+  batch_size       = 5 # process 5 articles per invocation
 }
 
 # --- Fargate (API) ---
@@ -378,13 +378,13 @@ resource "aws_ecs_service" "api" {
   name            = "intent-api"
   cluster         = aws_ecs_cluster.main.id
   task_definition = aws_ecs_task_definition.api.arn
-  desired_count   = 1  # single instance for demo--scale with load in prod
+  desired_count   = 1 # single instance for demo--scale with load in prod
   launch_type     = "FARGATE"
 
   network_configuration {
     subnets          = var.public_subnet_ids
     security_groups  = [aws_security_group.fargate.id]
-    assign_public_ip = true  # demo shortcut--ALB in production
+    assign_public_ip = true # demo shortcut--ALB in production
   }
 }
 
@@ -413,5 +413,5 @@ resource "aws_lambda_permission" "eventbridge_edgar" {
 }
 
 output "api_url" {
-  value = "http://<fargate-public-ip>:8000"  # in production, this comes from an ALB
+  value = "http://<fargate-public-ip>:8000" # in production, this comes from an ALB
 }

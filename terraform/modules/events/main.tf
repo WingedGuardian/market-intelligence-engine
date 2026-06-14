@@ -8,8 +8,8 @@ resource "aws_sqs_queue" "signals" {
   fifo_queue                  = true
   content_based_deduplication = true
 
-  visibility_timeout_seconds = 300  # extractor needs time for bedrock calls
-  message_retention_seconds  = 86400  # 1 day--signals older than that are stale
+  visibility_timeout_seconds = 300   # extractor needs time for bedrock calls
+  message_retention_seconds  = 86400 # 1 day--signals older than that are stale
 
   # DLQ for messages that fail extraction 3 times
   redrive_policy = jsonencode({
@@ -21,7 +21,7 @@ resource "aws_sqs_queue" "signals" {
 resource "aws_sqs_queue" "dlq" {
   name                      = "intent-signals-dlq-${var.environment}.fifo"
   fifo_queue                = true
-  message_retention_seconds = 604800  # 7 days for debugging
+  message_retention_seconds = 604800 # 7 days for debugging
 }
 
 # SNS topic for hot lead alerts--subscribers get email/slack/webhook

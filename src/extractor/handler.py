@@ -81,8 +81,8 @@ def _extract_signal(text: str) -> dict | None:
     except Exception as e:
         print(f"bedrock extraction failed: {e}")
         return None
-# TODO: batch upserts--current approach does N queries for N signals, fine at
-# our volume but will need a bulk merge if we add more feeds
+# one upsert per signal--N queries for N signals. fine at current feed volume;
+# switch to a bulk merge if the feed count grows
 def _persist_signal(db: Session, extraction: dict, raw_message: dict):
     name = extraction.get("company_name", "Unknown")
     domain = extraction.get("company_domain", "unknown.com")

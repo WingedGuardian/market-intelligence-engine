@@ -106,9 +106,8 @@ def _calculate_score(db: Session, company: Company) -> float:
         contribution = max(0, weight - decay) * (signal.confidence or 0.5)
         total += contribution
 
-    # TODO: the rapid_hiring check double-counts signals already scored above.
-    # at current weights this just means the bonus kicks in slightly early,
-    # not a real problem unless we add more hiring signal subtypes
+    # note: rapid_hiring can overlap signals scored above. at current weights the
+    # bonus just kicks in slightly early--revisit if more hiring signal subtypes are added
     # rapid hiring bonus: 5+ hiring signals in 30 days
     recent_hires = sum(
         1 for s in signals
